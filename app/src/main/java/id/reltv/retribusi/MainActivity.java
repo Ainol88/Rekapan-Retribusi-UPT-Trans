@@ -49,6 +49,13 @@ public class MainActivity extends Activity {
     String money(long n) { return rupiah.format(n); }
     void showDashboard() {
         base("REKAPAN RETRIBUSI JASA KEPELABUHANAN TAHUN 2026");
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(R.drawable.upt_trans_logo);
+        LinearLayout.LayoutParams logoParams = new LinearLayout.LayoutParams(180, 180);
+        logoParams.gravity = Gravity.CENTER;
+        logo.setLayoutParams(logoParams);
+        logo.setContentDescription("Logo UPT Trans");
+        root.addView(logo);
         TextView summary=text("TOTAL PENDAPATAN GABUNGAN 7 RETRIBUSI\n"+money(total("WHERE tanggal LIKE '2026-%'",new String[]{}))+"\nTahun 2026",22,Color.WHITE);
         summary.setGravity(Gravity.CENTER); summary.setBackgroundColor(Color.rgb(20,91,145)); root.addView(summary);
         for(int i=0;i<CATS.length;i++){ final int k=i; button(CATS[i],root,()->showCategory(k)); }
