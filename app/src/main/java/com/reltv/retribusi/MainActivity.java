@@ -31,13 +31,36 @@ public class MainActivity extends Activity {
  private long sum(String cat,String from,String to){SQLiteDatabase d=helper.getReadableDatabase();String q="SELECT COALESCE(SUM(amount),0) FROM tx WHERE date>=? AND date<=?"+(cat==null?"":" AND category=?");Cursor c=d.rawQuery(q,cat==null?new String[]{from,to}:new String[]{from,to,cat});c.moveToFirst();long n=c.getLong(0);c.close();return n;}
  private String yearStart(){return "2026-01-01";} private String yearEnd(){return "2026-12-31";}
  private void dashboard(){
-  base("REKAPAN RETRIBUSI JASA KEPELABUHANAN\nUPT TRANS TAHUN 2026");
-  TextView total=text("TOTAL PENDAPATAN GABUNGAN 7 RETRIBUSI\n"+rp(sum(null,yearStart(),yearEnd()))+"\nTAHUN 2026",22,NAVY,true);total.setGravity(17);total.setBackgroundColor(Color.WHITE);root.addView(total);
-  root.addView(text("MENU JENIS RETRIBUSI",17,NAVY,true));
-  for(String c:CATS)button("⚓   "+c,()->category(c));
-  button("📄   CETAK LAPORAN PDF",this::makePdf);
-  button("💾   BACKUP & PEMULIHAN DATA",this::backupMenu);
-  root.addView(text("UPT Trans – Melayani dengan Profesional",13,NAVY,true));
+  ScrollView sc=new ScrollView(this);
+  LinearLayout page=new LinearLayout(this);page.setOrientation(1);page.setBackgroundColor(0xffcfe7ff);
+  sc.addView(page);setContentView(sc);root=page;
+  // Header panel in the approved UPT Trans blue-and-gold style
+  LinearLayout head=new LinearLayout(this);head.setOrientation(0);head.setGravity(Gravity.CENTER_VERTICAL);head.setPadding(dp(14),dp(18),dp(14),dp(18));head.setBackgroundColor(0xff064b9b);page.addView(head);
+  TextView emblem=text("UPT",25,0xffffd22e,true);emblem.setGravity(Gravity.CENTER);emblem.setBackgroundColor(0xff073b80);emblem.setPadding(dp(12),dp(16),dp(12),dp(16));head.addView(emblem);
+  LinearLayout ht=new LinearLayout(this);ht.setOrientation(1);ht.setPadding(dp(12),0,0,0);head.addView(ht,new LinearLayout.LayoutParams(0,-2,1));
+  TextView h1=text("REKAPAN RETRIBUSI",21,Color.WHITE,true);h1.setPadding(0,0,0,0);ht.addView(h1);
+  TextView h2=text("JASA KEPELABUHANAN",19,0xffffd22e,true);h2.setPadding(0,0,0,0);ht.addView(h2);
+  TextView h3=text("UPT TRANS TAHUN 2026",17,Color.WHITE,true);h3.setPadding(0,0,0,0);ht.addView(h3);
+  TextView banner=text("⚓   PELAYANAN KEPELABUHANAN UPT TRANS",15,Color.WHITE,true);banner.setGravity(Gravity.CENTER);banner.setBackgroundColor(0xff1686c8);banner.setPadding(dp(10),dp(24),dp(10),dp(24));page.addView(banner);
+  LinearLayout card=new LinearLayout(this);card.setOrientation(1);card.setGravity(Gravity.CENTER);card.setPadding(dp(12),dp(15),dp(12),dp(15));card.setBackgroundColor(Color.WHITE);
+  LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(-1,-2);cp.setMargins(dp(14),dp(12),dp(14),dp(12));page.addView(card,cp);
+  TextView label=text("TOTAL PENDAPATAN GABUNGAN 7 RETRIBUSI",17,NAVY,true);label.setGravity(Gravity.CENTER);card.addView(label);
+  TextView amount=text(rp(sum(null,yearStart(),yearEnd())),31,0xff07843c,true);amount.setGravity(Gravity.CENTER);card.addView(amount);
+  TextView yr=text("TAHUN 2026",16,Color.WHITE,true);yr.setGravity(Gravity.CENTER);yr.setBackgroundColor(0xff079b45);card.addView(yr);
+  TextView menu=text("MENU JASA RETRIBUSI",18,NAVY,true);page.addView(menu);
+  int[] colors={0xff0874cf,0xff13a653,0xffff9800,0xff813ac8,0xff08a9c8,0xff8eae13,0xff5146df};
+  for(int i=0;i<CATS.length;i++){
+   LinearLayout row=new LinearLayout(this);row.setOrientation(0);row.setGravity(Gravity.CENTER_VERTICAL);row.setPadding(dp(10),dp(7),dp(10),dp(7));row.setBackgroundColor(Color.WHITE);
+   LinearLayout.LayoutParams rp=new LinearLayout.LayoutParams(-1,-2);rp.setMargins(dp(14),dp(4),dp(14),dp(4));page.addView(row,rp);
+   TextView ico=text(i==0?"🚘":i==6?"⚓":"船",23,Color.WHITE,true);ico.setGravity(Gravity.CENTER);ico.setBackgroundColor(colors[i]);ico.setWidth(dp(66));ico.setHeight(dp(58));row.addView(ico);
+   TextView name=text(CATS[i],15,NAVY,true);name.setGravity(Gravity.CENTER_VERTICAL);name.setPadding(dp(12),dp(8),dp(4),dp(8));row.addView(name,new LinearLayout.LayoutParams(0,-2,1));
+   TextView go=text("❯",20,BLUE,true);row.addView(go);
+   row.setOnClickListener(v->category(CATS[i]));
+  }
+  LinearLayout actions=new LinearLayout(this);actions.setOrientation(0);actions.setPadding(dp(10),dp(8),dp(10),dp(8));page.addView(actions);
+  Button pdf=new Button(this);pdf.setText("▣  Cetak Laporan PDF");pdf.setTextColor(Color.WHITE);pdf.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xff0759b4));pdf.setOnClickListener(v->makePdf());actions.addView(pdf,new LinearLayout.LayoutParams(0,dp(70),1));
+  Button backup=new Button(this);backup.setText("▤  Backup & Pemulihan Data");backup.setTextColor(Color.WHITE);backup.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xff079b45));backup.setOnClickListener(v->backupMenu());LinearLayout.LayoutParams bp=new LinearLayout.LayoutParams(0,dp(70),1);bp.setMargins(dp(8),0,0,0);actions.addView(backup,bp);
+  TextView foot=text("UPT Trans – Melayani dengan Profesional",15,Color.WHITE,true);foot.setGravity(Gravity.CENTER);foot.setBackgroundColor(0xff064b9b);foot.setPadding(dp(8),dp(15),dp(8),dp(15));page.addView(foot);
  }
  private void category(String cat){
   activeCat=cat;base(cat);
