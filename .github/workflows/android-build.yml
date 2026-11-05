@@ -2,7 +2,7 @@ name: Build Rekapan Retribusi UPT Trans
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "versi-2-pembangunan" ]
 jobs:
   build:
     runs-on: ubuntu-latest
