@@ -50,12 +50,13 @@ public class MainActivity extends Activity {
   TextView menu=text("MENU JASA RETRIBUSI",18,NAVY,true);page.addView(menu);
   int[] colors={0xff0874cf,0xff13a653,0xffff9800,0xff813ac8,0xff08a9c8,0xff8eae13,0xff5146df};
   for(int i=0;i<CATS.length;i++){
+   final String catName=CATS[i];
    LinearLayout row=new LinearLayout(this);row.setOrientation(0);row.setGravity(Gravity.CENTER_VERTICAL);row.setPadding(dp(10),dp(7),dp(10),dp(7));row.setBackgroundColor(Color.WHITE);
    LinearLayout.LayoutParams rp=new LinearLayout.LayoutParams(-1,-2);rp.setMargins(dp(14),dp(4),dp(14),dp(4));page.addView(row,rp);
    TextView ico=text(i==0?"🚘":i==6?"⚓":"船",23,Color.WHITE,true);ico.setGravity(Gravity.CENTER);ico.setBackgroundColor(colors[i]);ico.setWidth(dp(66));ico.setHeight(dp(58));row.addView(ico);
    TextView name=text(CATS[i],15,NAVY,true);name.setGravity(Gravity.CENTER_VERTICAL);name.setPadding(dp(12),dp(8),dp(4),dp(8));row.addView(name,new LinearLayout.LayoutParams(0,-2,1));
    TextView go=text("❯",20,BLUE,true);row.addView(go);
-   row.setOnClickListener(v->category(CATS[i]));
+   row.setOnClickListener(v->category(catName));
   }
   LinearLayout actions=new LinearLayout(this);actions.setOrientation(0);actions.setPadding(dp(10),dp(8),dp(10),dp(8));page.addView(actions);
   Button pdf=new Button(this);pdf.setText("▣  Cetak Laporan PDF");pdf.setTextColor(Color.WHITE);pdf.setBackgroundTintList(android.content.res.ColorStateList.valueOf(0xff0759b4));pdf.setOnClickListener(v->makePdf());actions.addView(pdf,new LinearLayout.LayoutParams(0,dp(70),1));
